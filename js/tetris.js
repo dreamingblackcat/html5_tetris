@@ -45,21 +45,27 @@ var GameState={
 			GameState.ctx=c.getContext("2d");
 			clearInterval(GameState.timer);
 			GameState.timer=setInterval(function(){GameState.gameStep()},GameState.timestep);
-			GameState.updateScore();				
+			GameState.drawGrid();
+			GameState.updateScore();
+							
 		},
 		pause: function(){
-			if(GameState.pause){
-
+			// console.log("Pause called");
+			if(GameState.paused){
+				GameState.timer=setInterval(GameState.gameStep,GameState.timestep);
+				document.getElementById("pause").innerHTML="Pause";
+				GameState.paused=false;
 			}else{
-			clearInterval(GameState.timer);
-			document.getElementById("pause").innerHTML="Unpause";
+				clearInterval(GameState.timer);
+				document.getElementById("pause").innerHTML="Unpause";
+				GameState.paused=true;
 			}
 		},
 		keyDown: function(event){
 			if(GameState.paused)return;
 			var x2,y2,o2;
 			GameState.ctx.clearRect(0,0,200,400);
-			console.log(event.keyCode);
+			// console.log(event.keyCode);
 			switch(event.keyCode){
 			case 37:{//left arrow
 				GameState.drawTetrimino(GameState.currentTetrimino.x,GameState.currentTetrimino.y,GameState.currentTetrimino.type,GameState.currentTetrimino.orientation,0);
@@ -87,7 +93,7 @@ var GameState={
 			}
 			case 40:{// down arrow
 				GameState.drawTetrimino(GameState.currentTetrimino.x,GameState.currentTetrimino.y,GameState.currentTetrimino.type,GameState.currentTetrimino.orientation,0);
-				console.log("Pressing 40 moving down");
+				// console.log("Pressing 40 moving down");
 				y2=GameState.currentTetrimino.y-1;
 				if(GameState.drawTetrimino(GameState.currentTetrimino.x,y2,GameState.currentTetrimino.type,GameState.currentTetrimino.orientation,-1)){
 					GameState.currentTetrimino.y=y2;
@@ -115,7 +121,7 @@ var GameState={
 		},
 		drawGrid: function(){
 			GameState.ctx.clearRect(0,0,200,400);
-			console.log("Rectangle has been cleard");
+			// console.log("Rectangle has been cleard");
 			for(i=0;i< 20;i++){
 				for(j=0;j< 10;j++){
 					GameState.drawBlock(j,i,GameState.grid[i][j]);
@@ -132,7 +138,7 @@ var GameState={
 				GameState.drawTetrimino(GameState.currentTetrimino.x,GameState.currentTetrimino.y,GameState.currentTetrimino.type,GameState.currentTetrimino.orientation,1)
 				GameState.checkLines();
 				t2=Math.floor((Math.random()*6));
-				console.log("The new type random number is:" + t2);
+				// console.log("The new type random number is:" + t2);
 				x2=4;
 				y2=19;
 				o2=0;
@@ -148,7 +154,7 @@ var GameState={
 				}
 			}
 			GameState.drawTetrimino(GameState.currentTetrimino.x,GameState.currentTetrimino.y,GameState.currentTetrimino.type,GameState.currentTetrimino.orientation,1);
-			console.log("Drawing grid");
+			// console.log("Drawing grid");
 			GameState.drawGrid();
 		},
 		checkLines: function(){
@@ -182,14 +188,14 @@ var GameState={
 			}
 		},
 		updateScore: function(){
-			console.log("Updating Score"+document.getElementById("score"));
+			// console.log("Updating Score"+document.getElementById("score"));
 			document.getElementById("score").innerHTML="Level:"+GameState.level+" , Score: "+ GameState.score;
 		},
 		drawBlock: function(x,y,t){
 			var pixelX=x*20;
 			var pixelY=(19-y)*20;
 			var c=GameState.constants.blockColors[t];
-			console.log(c);
+			// console.log(c);
 			GameState.ctx.fillStyle="hsl("+c+",100%,50%)";
 			GameState.ctx.fillRect(pixelX+2,pixelY+2,16,16);
 
@@ -231,7 +237,7 @@ var GameState={
 		drawTetrimino: function(x,y,t,o,d){
 			var c;
 			if(d===0){
-				console.log("Setting clearbit!");
+				// console.log("Setting clearbit!");
 				c=7;
 			}
 			else if(d===-1){
@@ -391,7 +397,7 @@ var GameState={
 				GameState.grid[y][x]=t;
 				return true;
 			}
-			console.log("beyond visible grid"+y);
+			// console.log("beyond visible grid"+y);
 		return false;
 		},
 		tetriminoDrawingTest: function(){
@@ -435,6 +441,6 @@ var GameState={
 	};
 
 	function updateDoom(id,text){
-		console.log(document.getElementById("score"));
+		// console.log(document.getElementById("score"));
 		document.getElementById("id").innerHTML="abc";
 	}
