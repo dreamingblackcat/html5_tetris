@@ -5,6 +5,7 @@ var o;
 var grid;
 var blockColors;
 var ctx;
+var timer;
 function initialize(){
 	t=0;
 	x=4;
@@ -20,7 +21,8 @@ function initialize(){
 	}
 	c=document.getElementById("myCanvas");
 	ctx=c.getContext("2d");
-	//tetriminoDrawingTest();
+	clearInterval(timer);
+	timer=setInterval(function(){gameStep()},1000);
 }
 
 function drawBlock(x,y,t){
@@ -69,15 +71,15 @@ function drawBlock(x,y,t){
 }
 
 function drawTetrimino(x,y,t,o,d){
-		var c;
-		if(d===0){
-			console.log("Setting clearbit!");
-			c=7;
-		}
-		else if(d===-1){
-			c=-1;
-		}else c=t;
-		var valid=true;
+	var c;
+	if(d===0){
+		console.log("Setting clearbit!");
+		c=7;
+	}
+	else if(d===-1){
+		c=-1;
+	}else c=t;
+	var valid=true;
 	if(t===0){//for I shape
 	 	// c=180;
 		if(o===0){
@@ -264,20 +266,22 @@ function keyDown(event){
 		}
 		break;
 	}
-	// case 32:{
-	// 	drawTetrimino(x,y,t,o,0);
-	// 	while(drawTetrimino(x,y,t,o,-1)){
-	// 		y-=1;
-	// 	}
-	// }
-	default: {
+	case 32:{
 		drawTetrimino(x,y,t,o,0);
-		t=Math.floor((Math.random())* 7);
-		x=4;
-		y=18;
-		o=0;
-	} }
-	
+		while(drawTetrimino(x,y,t,o,-1)){
+			y-=1;
+		}
+		break;
+	}
+	default: 
+	//{
+	// 	drawTetrimino(x,y,t,o,0);
+	// 	t=Math.floor((Math.random())* 7);
+	// 	x=4;
+	// 	y=18;
+	// 	o=0;
+	// } }
+	}
 	drawTetrimino(x,y,t,o,1);
 	drawGrid();
 }
@@ -292,12 +296,62 @@ function drawGrid(){
 }
 
 function setGrid(x,y,t){
-	if( x>=0 && x<10 && y>=0 && y<20){
+	if( x>=0 && x<10 && y>=0 && y<22){
 		if(t===-1)return grid[y][x]===7;
 		grid[y][x]=t;
 		return true;
 	}
 return false;
+}
+
+function gameStep(){
+	var x2,y2,o2,t2;
+	drawTetrimino(x,y,t,o,0);
+	y2=y-1;
+	if(drawTetrimino(x,y2,t,o,-1)){
+		y=y2;
+	}else{
+		drawTetrimino(x,y,t,o,1)
+		checkLines();
+		t2=Math.floor((Math.random()*6));
+		console.log("The new type random number is:" + t2);
+		x2=4;
+		y2=19;
+		o2=0;
+		if(drawTetrimino(x2,y2,t2,o2,-1)){
+			x=x2;
+			y=y2;
+			t=t2;
+			o=o2;
+		}else{
+			alert("Game Over");
+			initialize();
+			return;
+		}
+	}
+	drawTetrimino(x,y,t,o,1);
+	console.log("Drawing grid");
+	drawGrid();
+}
+
+function checkLines(){
+	for(i=0;i<20;i++){
+		var full=true;
+		for(j=0;j<10;j++){
+			full= full && grid[i][j]!==7;
+		}
+		if(full){
+			for(ii=i;ii<19;ii++){
+				for(jj=0;jj<10;jj++){
+					grid[ii][jj]=grid[ii+1][jj];
+				}
+			}
+			for(jj=0;jj<10;jj++){
+				grid[19][jj]=7;
+			}
+			i--;
+		}
+	}
 }
 
 function tetriminoDrawingTest(){
