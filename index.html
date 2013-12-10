@@ -6,9 +6,9 @@
 	<link rel="stylesheet" href="css/tetris.css">
 	<script src="js/tetris.js"></script>
 </head>
-<body onload="initialize()" onkeydown="keyDown(event)">
+<body onload="GameState.initialize()" onkeydown="GameState.keyDown(event)">
 	<canvas id="myCanvas" width="200px" height="400px"></canvas>
 	<div id="score">Score: 0</div>
-	
+	<button id="pause" onclick="GameState.pause()">Pause</button>
 </body>
 </html>
