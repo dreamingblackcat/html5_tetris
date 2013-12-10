@@ -12,8 +12,8 @@ function initialize(){
 	y=18;
 	o=0;
 	blockColors=[180,280,40,240,60,120,80,0];
-	grid=new Array(20);
-	for(i=0;i< 20;i++){
+	grid=new Array(22);
+	for(i=0;i< 22;i++){
 		grid[i]=new Array(10);
 		for(j=0;j< 10;j++){
 			grid[i][j]=7;
@@ -268,7 +268,7 @@ function keyDown(event){
 	}
 	case 32:{
 		drawTetrimino(x,y,t,o,0);
-		while(drawTetrimino(x,y,t,o,-1)){
+		while(drawTetrimino(x,y-1,t,o,-1)){
 			y-=1;
 		}
 		break;
@@ -301,6 +301,7 @@ function setGrid(x,y,t){
 		grid[y][x]=t;
 		return true;
 	}
+	console.log("beyond visible grid"+y);
 return false;
 }
 
